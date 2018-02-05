@@ -14,7 +14,6 @@ const passport = require('passport');
 const session = require('express-session'); // 세션 설정
 const app = express();
 
-
 app.use(require('connect-history-api-fallback')())
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,7 +35,6 @@ app.use(passport.initialize()); // passport 구동
 app.use(passport.session()); // 세션 연결
 
 db();
-test();
 passportLocal();
 
 app.use('/', index);
