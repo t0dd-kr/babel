@@ -22,7 +22,7 @@
     </div>
     <div class="container-modifier col-12 row justify-content-center">
       <div class="modifier-notice row">
-        변경요청 0건
+        0 change request
       </div>
     </div>
   </div>
