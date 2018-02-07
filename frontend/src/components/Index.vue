@@ -1,19 +1,17 @@
 <template>
   <div class="index">
     <Header/>
-    <div class="col-4">
-      <Card/>
-    </div>
+    <Body/>
   </div>
 </template>
 
 <script>
 import Header from './Header'
-import Card from './Card'
+import Body from './Body'
 export default {
   name: 'Index',
   components: {
-    Card,
+    Body,
     Header
   }
 }

@@ -20,6 +20,11 @@
         </div>
       </div>
     </div>
+    <div class="container-modifier col-12 row justify-content-center">
+      <div class="modifier-notice row">
+        변경요청 0건
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,29 +38,40 @@ export default {
   .container-card {
     z-index: 1;
     display: block;
-    width: 600px;
+    width: 75%;
     color: black;
-    border: black 2px solid;
   }
   .container-question {
     margin: 0;
-    background-color: #F2F3F4;
-    padding-top: .75rem;
-    padding-bottom: .75rem;
+    background-color: #E0E2E3;
+    padding: .75rem;
     max-width: 100%;
+    border-radius: .4rem .4rem 0rem 0rem;
   }
   .container-answer {
     margin: 0;
     background-color: #FFF;
-    padding-top: .75rem;
-    padding-bottom: .75rem;
+    padding: .75rem;
     max-width: 100%;
+    /* border-radius: 0rem 0rem .4rem .4rem; */
   }
   .left-question, .left-answer {
-    font-size: 1.5rem;
+    font-size: 3rem;
   }
   .answer {
     padding-top: .25rem;
-    padding-bottom: .25rem;
+    padding-bottom: .5rem;
+  }
+  .container-modifier {
+    padding: .25rem;
+    margin: 0;
+    max-width: 100%;
+    background-color: #E0FFE0;
+    border-radius: 0rem 0rem .4rem .4rem;
+  }
+  .modifier-notice {
+    font-size: .8rem;
+    color: #25E025;
+    font-weight: bolder;
   }
 </style>
