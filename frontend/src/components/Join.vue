@@ -19,21 +19,23 @@
               </div>
               <div class="col-9 row align-items-center">
                 <div class="col">
-                  <div class="answer">
-                    <input type="text" name="name" value="" placeholder="name">
-                  </div>
-                  <div class="answer">
-                    <input type="email" name="email" value="" placeholder="e-mail">
-                  </div>
-                  <div class="answer">
-                    <input type="password" name="password" value="" placeholder="password">
-                  </div>
-                  <div class="answer">
-                    <input type="password" name="password-confirm" value="" placeholder="contirm password">
-                  </div>
-                  <div class="answer">
-                    <button type="submit">Sign Up</button>
-                  </div>
+                  <form>
+                    <div class="answer">
+                      <input v-model="name" type="text" name="name" value="" placeholder="name">
+                    </div>
+                    <div class="answer">
+                      <input v-model="email" type="email" name="email" value="" placeholder="e-mail">
+                    </div>
+                    <div class="answer">
+                      <input v-model="password" type="password" name="password" value="" placeholder="password">
+                    </div>
+                    <div class="answer">
+                      <input v-model="password_confirm" type="password" name="password-confirm" value="" placeholder="contirm password">
+                    </div>
+                    <div class="answer">
+                      <button type="button" v-on:click="join">Sign Up</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -55,6 +57,38 @@ export default {
   name: 'Login',
   components: {
     Header
+  },
+  methods: {
+    join: function () {
+      if (this.password === this.password_confirm) {
+        console.log('join')
+        this.$http.post('/auth/join', {
+          email: this.email,
+          password: this.password,
+          name: this.name
+        })
+          .then((res) => {
+            if (res.data.status) {
+              this.$router.push('/')
+            } else {
+              // alert(res.data.message)
+              this.errorcode = res.data.message
+            }
+          })
+          .catch((res) => {
+            console.log(res)
+          })
+      }
+    }
+  },
+  data () {
+    return {
+      errorcode: 0,
+      name: '',
+      email: '',
+      password: '',
+      password_confirm: ''
+    }
   }
 }
 </script>

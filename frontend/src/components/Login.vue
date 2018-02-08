@@ -10,7 +10,7 @@
                 Q.
               </div>
               <div class="question col row align-items-center">
-                What's your e-mail address & password?
+                What's your e-mail & password?
               </div>
             </div>
             <div class="container-answer row">
@@ -20,20 +20,20 @@
               <div class="col-9 row align-items-center">
                 <div class="col">
                   <div class="answer">
-                    <input type="email" name="email" value="" placeholder="e-mail">
+                    <input v-model="email" type="email" name="email" value="" placeholder="e-mail">
                   </div>
                   <div class="answer">
-                    <input type="password" name="password" value="" placeholder="password">
+                    <input v-model="password" type="password" name="password" value="" placeholder="password">
                   </div>
                   <div class="answer">
-                    <button type="submit">Sign in</button>
+                    <button type="button" v-on:click="login">Sign in</button>
                   </div>
                 </div>
               </div>
             </div>
             <div class="container-error col-12 row justify-content-center">
               <div class="error-notice row">
-                0 error occured
+                {{error}}
               </div>
             </div>
           </div>
@@ -49,6 +49,44 @@ export default {
   name: 'Login',
   components: {
     Header
+  },
+  methods: {
+    login: function () {
+      this.$http.post('/auth/login', {
+        email: this.email,
+        password: this.password
+      })
+        .then((res) => {
+          if (res.data.status) {
+            this.$router.push('/')
+          } else {
+            // alert(res.data.message)
+            this.errorcode = res.data.message
+          }
+        })
+        .catch((res) => {
+          console.log(res)
+        })
+    }
+  },
+  data () {
+    return {
+      errorcode: 0,
+      email: '',
+      password: ''
+    }
+  },
+  computed: {
+    error: function () {
+      switch (this.errorcode) {
+        case 0:
+          return '0 error occured'
+        case 1:
+          return 'error occured: Wrong e-mail'
+        case 2:
+          return 'error occured: Wrong password'
+      }
+    }
   }
 }
 </script>

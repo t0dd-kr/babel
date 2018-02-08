@@ -20,7 +20,7 @@ module.exports = () => {
     session: true, // 세션에 저장 여부
     passReqToCallback: true,
   }, (req, email, password, done) => {
-    User.findOne({ email: email}, (findError, user) => {
+    User.findOne({email: email}, (findError, user) => {
       if (findError) {
         console.log('internal ERROR');
         return done(findError);
@@ -28,7 +28,7 @@ module.exports = () => {
       if (!user)
       {
         console.log('NO ID');
-        return done(null, false, { message: 'Wrong ID' }); // 임의 에러 처리
+        return done(null, false, { message: 1 }); // 임의 에러 처리
       }
       return user.comparePassword(password, (passError, isMatch) => {
         if (isMatch) {
@@ -36,7 +36,7 @@ module.exports = () => {
           return done(null, user); // 검증 성공
         }
         console.log('WRONG PW');
-        return done(null, false, { message: 'Wrong PW' }); // 임의 에러 처리
+        return done(null, false, { message: 2 }); // 임의 에러 처리
       });
     });
   }));

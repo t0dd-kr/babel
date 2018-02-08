@@ -1,14 +1,25 @@
 <template lang="html">
   <div class="container-fluid container-header" role="banner">
-    <div class="d-flex px-3 flex-justify-between container-lg">
+    <div class="d-flex px-3 flex-justify-between container-lg row align-items-center">
       <div class="container-search col-2">
         <input type="text" class="search" name="" value="" placeholder="Search">
         <a href="#" class="container-btn-search">
           <img src="../assets/search.svg" class="btn-search">
         </a>
       </div>
-      <div class="col-8"></div>
-      <div class="">
+      <div class="col-8 row justify-content-center align-items-center">
+        <router-link :to="{ name: 'Index'}" class="link">
+          <img src="../assets/logo.png" class="logo" alt="">
+        </router-link>
+      </div>
+      <div v-if="authorized" class="row align-items-center">
+        Welcome,&nbsp;
+        <div class="user-name">
+          {{user_name}}
+        </div>
+        <img src="../assets/logout.svg" class="logout" v-on:click="logout">
+      </div>
+      <div v-else class="">
         <div class="sign-in">
           <router-link :to="{ name: 'Login'}" class="link">Sign in</router-link>
         </div>
@@ -23,13 +34,46 @@
 
 <script>
 export default {
-  name: 'Header'
+  name: 'Header',
+  beforeCreate: function () {
+    this.$http.get('/auth')
+      .then((res) => {
+        if (res.data !== '') {
+          this.authorized = true
+          this.user_name = res.data.name
+          this.user_id = res.data._id
+        } else {
+          this.authorized = false
+        }
+      })
+      .catch((res) => {
+        this.authorized = false
+      })
+  },
+  methods: {
+    logout: function () {
+      this.$http.post('/auth/logout')
+        .then((res) => {
+          this.$router.go('/')
+        })
+        .catch((res) => {
+          console.log(res)
+        })
+    }
+  },
+  data () {
+    return {
+      authorized: false,
+      user_name: '',
+      user_id: ''
+    }
+  }
 }
 </script>
 
 <style scoped>
   .container-header {
-    z-index: 1;
+    z-index: 2;
     padding-top: 12px;
     padding-bottom: 12px;
     color: rgba(255,255,255,0.75);
@@ -74,7 +118,7 @@ export default {
     margin: .25rem .6rem .3rem .25rem;
     height:.9rem;
   }
-  .sign-in, .sign-up {
+  .sign-in, .sign-up, .user-name{
     color: white;
     font-weight: bolder;
     display: inline-block;
@@ -82,5 +126,12 @@ export default {
   .link {
     color:white;
     text-decoration: none;
+  }
+  .logo {
+    height: 2rem;
+  }
+  .logout {
+    height: 1rem;
+    margin-left: .75rem;
   }
 </style>

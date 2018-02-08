@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema({
   id: mongoose.Schema.Types.ObjectId
 });
 
-userSchema.index({ email: 1, nickname: 1 });
+userSchema.index({ email: 1, name: 1 });
 
 userSchema.methods.comparePassword = function(password, cb) {
-  crypto.pbkdf2(password, this.salt.toString('base64'), 99321, 64, 'sha512', (err, key) => {
+  crypto.pbkdf2(password, this.salt, 99321, 64, 'sha512', (err, key) => {
     if(key.toString('base64') == this.password)
     {
       cb(null, true);
