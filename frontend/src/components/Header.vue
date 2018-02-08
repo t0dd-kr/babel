@@ -10,11 +10,11 @@
       <div class="col-8"></div>
       <div class="">
         <div class="sign-in">
-          Sign in
+          <router-link :to="{ name: 'Login'}" class="link">Sign in</router-link>
         </div>
         or
         <div class="sign-up">
-          Sign up
+          <router-link :to="{ name: 'Join'}" class="link">Sign up</router-link>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@ export default {
     box-shadow: none;
     outline: none;
   }
-  .search:focus + .container-btn-search{
+  .search:focus + .container-btn-search {
     background-color: rgba(255,255,255,0.175);
   }
   .search:focus, .search:focus + .container-btn-search{
@@ -78,5 +78,9 @@ export default {
     color: white;
     font-weight: bolder;
     display: inline-block;
+  }
+  .link {
+    color:white;
+    text-decoration: none;
   }
 </style>

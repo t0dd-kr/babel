@@ -1,11 +1,12 @@
 <template lang="html">
-  <div class="container-card">
+  <div class="card-main">
     <div class="container-question row">
       <div class="left-question col-3 row justify-content-center align-items-center">
         Q.
       </div>
-      <div class="question col-9 row align-items-center">
+      <div class="question col row align-items-center">
         Why does do doing else you are doing ?
+        <img src="../assets/pencil.svg" class="btn-write" v-on:click="$emit('write')">
       </div>
     </div>
     <div class="container-answer row">
@@ -30,15 +31,15 @@
 
 <script>
 export default {
-  name: 'Card'
+  name: 'CardMain'
 }
 </script>
 
 <style scoped>
-  .container-card {
+  .card-main {
     z-index: 1;
     display: block;
-    width: 75%;
+    width: 90%;
     color: black;
   }
   .container-question {
@@ -73,5 +74,15 @@ export default {
     font-size: .8rem;
     color: #25E025;
     font-weight: bolder;
+  }
+  .btn-write {
+    background-image: url('../assets/pencil.svg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 1.25rem;
+    height: 1.25rem;
+    position: absolute;
+    bottom: -.1rem;
+    right: .8rem;
   }
 </style>

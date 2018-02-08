@@ -3,33 +3,40 @@
     <div class="row">
       <div class="col-2">
         <div class="container-card-parent row justify-content-center">
-          <Card/>
+          <CardParent/>
         </div>
+        <div class="darken"></div>
       </div>
       <div class="col-5">
         <div class="container-card-main row justify-content-center">
-          <Card/>
+          <CardMain/>
         </div>
       </div>
       <div class="container-children col-3">
         <div class="container-card-children row justify-content-center" v-for="n in 10" v-bind:key="n">
-          <Card/>
+          <CardChildren/>
         </div>
       </div>
       <div class="col-2">
         <div class="container-card-grandson row justify-content-center">
-          <Card/>
+          <CardGrandson/>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import Card from './Card'
+import CardParent from './CardParent'
+import CardMain from './CardMain'
+import CardChildren from './CardChildren'
+import CardGrandson from './CardGrandson'
 export default {
   name: 'Body',
   components: {
-    Card
+    CardParent,
+    CardMain,
+    CardChildren,
+    CardGrandson
   }
 }
 </script>
@@ -43,7 +50,25 @@ export default {
   }
   .container-card-parent {
     position:absolute;
-    width: 200%;
-    left: -100%;
+    width: 150%;
+    left: -50%;
+    z-index: 10;
+    transition: left .25s
+  }
+  .darken {
+    position:fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    transition: background-color .25s, z-index .25s;
+  }
+  .container-card-parent:hover {
+    left: 5%;
+  }
+  .container-card-parent:hover + .darken{
+    background-color: rgba(0,0,0,0.25);
+    z-index: 9;
   }
 </style>

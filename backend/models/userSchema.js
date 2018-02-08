@@ -4,8 +4,8 @@ const crypto = require('crypto');
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, match : /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/},
   password: { type: String, required: true, trim: true },
-  nickname: { type: String, required: true, unique: true, trim: true},
-  salt: {type: String, required: true, trim: true},
+  name: { type: String, required: true, unique: true, trim: true},
+  salt: { type: String, required: true, trim: true},
   id: mongoose.Schema.Types.ObjectId
 });
 
