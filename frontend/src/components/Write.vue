@@ -61,9 +61,8 @@ export default {
     position:fixed;
     top: 0px;
     left: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+    width: 0%;
+    height: 0%;
     transition: background-color .25s, z-index .25s;
   }
   .container-card-parent:hover {
@@ -71,6 +70,7 @@ export default {
   }
   .container-card-parent:hover + .darken{
     background-color: rgba(0,0,0,0.25);
-    z-index: 9;
+    width: 100%;
+    height: 100%;
   }
 </style>

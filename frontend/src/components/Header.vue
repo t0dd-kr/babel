@@ -17,7 +17,9 @@
         <div class="user-name">
           {{user_name}}
         </div>
-        <img src="../assets/logout.svg" class="logout" v-on:click="logout">
+        <a href="javascript:;">
+          <img src="../assets/logout.svg" class="logout" v-on:click="logout">
+        </a>
       </div>
       <div v-else class="">
         <div class="sign-in">

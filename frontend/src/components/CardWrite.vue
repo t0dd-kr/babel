@@ -10,7 +10,7 @@
           name="question"
           rows="1"
           placeholder="Any question?"
-          v-on:keydown="autosize($event)"
+          v-on:keydown="autoSize($event)"
         />
       </div>
     </div>
@@ -18,26 +18,71 @@
       <div class="left-answer col-3 row justify-content-center align-items-center">
         A.
       </div>
-      <ol class="col row align-items-center">
-        <li v-for="(answer, index) in answers" class="col-12 answer" v-bind:key="index">
-          <textarea
-            class="input-answer"
-            v-bind:name="'answer-' + (index + 1)"
-            rows="1"
-            placeholder="Write your answer here."
-            v-on:keydown="autosize($event)"
-            v-on:blur="addAnswer($event, index)"
-          />
-          <textarea
-            class="input-answer-detail"
-            v-bind:name="'answer-detail-' + (index + 1)"
-            rows="1"
-            placeholder="details..."
-            v-on:keydown="autosize($event)"
-            v-on:blur="onBlur($event)"
-          />
-        </li>
-      </ol>
+      <div class="col">
+        <div class="container-reference col-12 row justify-content-start">
+          <div class="reference" v-for="(reference, index) in references" v-bind:key="reference">
+            <div class="text-reference">
+              <a :href="reference" target="_blank">
+                {{ reference }}
+              </a>
+            </div>
+            <div class="delete-reference"
+              v-on:click="deleteReference($event, index)"
+            >
+            </div>
+          </div>
+          <div class="w-100"></div>
+          <input type="text" class="input-reference" placeholder="Please leave the source..."
+            v-on:keydown="addReference($event)"
+          >
+        </div>
+        <ol class="col row align-items-center">
+          <li v-for="(answer, index) in answers" class="col-12 answer" v-bind:key="index">
+            <textarea
+              class="input-answer"
+              v-bind:name="'answer-' + (index + 1)"
+              rows="1"
+              placeholder="Write your answer here."
+              v-on:keydown="autoSize($event)"
+              v-on:blur="onBlur($event)"
+              v-on:focus="onFocus($event, index)"
+              v-model="answer.answer"
+            />
+            <textarea
+              class="input-answer-detail"
+              v-bind:name="'answer-detail-' + (index + 1)"
+              rows="1"
+              placeholder="Details..."
+              v-on:keydown="autoSize($event)"
+              v-on:blur="onBlurDetail($event)"
+              v-on:focus="onFocus($event, index)"
+              v-model="answer.detail"
+            />
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="container-hashtag col-12 row justify-content-center">
+      <div class="hashtag" v-for="(hashtag, index) in hashtags" v-bind:key="hashtag">
+        <div class="text-hashtag">
+          #{{ hashtag }}
+        </div>
+        <div class="delete-hashtag"
+          v-on:click="deleteHashtag($event, index)"
+        >
+        </div>
+      </div>
+      <div class="w-100"></div>
+      <input type="text" class="input-hashtag" placeholder="Type hashtag here..."
+        v-on:keydown="addHashtag($event)"
+      >
+    </div>
+    <div class="container-submit col-12 row justify-content-end">
+      <button type="button"
+        v-on:click="submit"
+      >
+        Submit
+      </button>
     </div>
   </div>
 </template>
@@ -46,7 +91,7 @@
 export default {
   name: 'CardWrite',
   methods: {
-    autosize: function (event) {
+    autoSize: function (event, index) {
       var el = event.target
       if (event.keyCode === 13) {
         if (el.className === 'input-answer') {
@@ -56,6 +101,14 @@ export default {
           event.preventDefault()
           el.blur()
         }
+      } else if (event.keyCode === 8) {
+        if (el.className === 'input-answer' || el.className === 'input-answer-detail') {
+          if (el.parentNode.children[0].value === '' && el.parentNode.children[1].value === '') {
+            this.answers = this.answers.filter((value, idx) => {
+              return idx !== index
+            })
+          }
+        }
       }
       setTimeout(function () {
         el.style.cssText = 'height:auto; padding:0'
@@ -64,22 +117,100 @@ export default {
         el.style.cssText = 'height:' + (el.scrollHeight + 21) + 'px'
       }, 0)
     },
-    onBlur: function (event) {
+    onBlurDetail: function (event) {
       var el = event.target
       if (el.value[el.value.length - 1] === '\n') {
         el.value = el.value.slice(0, -1)
-        this.autosize(event)
+        this.autoSize(event)
+      }
+      this.onBlur(event)
+    },
+    onBlur: function (event) {
+      while (this.answers[this.answers.length - 1].answer === '' && this.answers[this.answers.length - 1].detail === '' &&
+      this.answers[this.answers.length - 2].answer === '' && this.answers[this.answers.length - 2].detail === '') {
+        this.answers.pop()
       }
     },
-    addAnswer: function (event, index) {
+    onFocus: function (event, index) {
       var el = event.target
-      if (this.answers.length < 5) {
-        if (el.value.length !== 0 && this.answers.length === index + 1) {
-          this.answers.push({answer: '', detail: ''})
-        } else if (el.value.length === 0 && this.answers.length === index + 1 && this.answers.length !== 1) {
-          this.answers.pop()
-        }
+      if (index === this.answers.length - 1 && el.value.length === 0 && this.answers.length < 5) {
+        this.answers.push({answer: '', detail: ''})
       }
+    },
+    submit: function () {
+      this.$http.post('/api/card', {
+      })
+        .then((res) => {
+          if (res.data.status) {
+            this.$router.push(`/show/${res.data.id}`)
+          }
+        })
+        .catch((res) => {
+          console.log('card save error')
+        })
+    },
+    addHashtag: function (event) {
+      var el = event.target
+      var hashtag = el.value.trim()
+      if (event.keyCode === 13) {
+        if (hashtag.indexOf(' ') !== -1) {
+          el.placeholder = 'Cannot include blank (\' \') in the hashtag'
+          setTimeout(function () {
+            el.placeholder = 'Type hashtag here...'
+          }, 1500)
+        } else if (hashtag !== '') {
+          var filtered = this.hashtags.filter((value) => {
+            return value === hashtag
+          })
+          if (filtered.length === 0) {
+            this.hashtags.push(hashtag)
+          } else {
+            el.placeholder = 'Same hashtag already exists.'
+            setTimeout(function () {
+              el.placeholder = 'Type hashtag here...'
+            }, 1500)
+          }
+        }
+        el.value = ''
+      }
+    },
+    deleteHashtag: function (event, index) {
+      this.hashtags = this.hashtags.filter((value, idx) => {
+        return index !== idx
+      })
+    },
+    addReference: function (event) {
+      var el = event.target
+      var reference = el.value.trim()
+      if (reference.indexOf('http://') === -1 && reference.indexOf('https://') === -1) {
+        reference = 'http://' + reference
+      }
+      if (event.keyCode === 13) {
+        if (reference.indexOf(' ') !== -1) {
+          el.placeholder = 'Cannot include blank (\' \')'
+          setTimeout(function () {
+            el.placeholder = 'Please leave the source...'
+          }, 1500)
+        } else if (reference !== '') {
+          var filtered = this.references.filter((value) => {
+            return value === reference
+          })
+          if (filtered.length === 0) {
+            this.references.push(reference)
+          } else {
+            el.placeholder = 'Same source already exists.'
+            setTimeout(function () {
+              el.placeholder = 'Please leave the source...'
+            }, 1500)
+          }
+        }
+        el.value = ''
+      }
+    },
+    deleteReference: function (event, index) {
+      this.references = this.references.filter((value, idx) => {
+        return index !== idx
+      })
     }
   },
   data () {
@@ -87,7 +218,12 @@ export default {
       answers: [{
         answer: '',
         detail: ''
-      }]
+      }],
+      user_id: '',
+      parent: null,
+      hashtags: [],
+      references: [],
+      is_ordered: true
     }
   }
 }
@@ -100,7 +236,7 @@ export default {
     width: 90%;
     color: black;
   }
-  .container-question {
+  .container-question{
     margin: 0;
     background-color: #E0E2E3;
     padding: .75rem;
@@ -108,6 +244,18 @@ export default {
     border-radius: .4rem .4rem 0rem 0rem;
   }
   .container-answer {
+    margin: 0;
+    background-color: #FFF;
+    padding: .75rem;
+    max-width: 100%;
+  }
+  .container-hashtag {
+    margin: 0;
+    background-color: #FFF;
+    padding: .75rem;
+    max-width: 100%;
+  }
+  .container-submit {
     margin: 0;
     background-color: #FFF;
     padding: .75rem;
@@ -125,6 +273,7 @@ export default {
   }
   ol {
     padding-left: 2.5rem;
+    margin: 0;
   }
   li, li textarea, li input{
     float: left;
@@ -132,7 +281,7 @@ export default {
   input {
     display: block;
     width: 90%;
-    height: 3rem;
+    height: 2rem;
     border-collapse: collapse;
     box-sizing: border-box;
     background-color: rgb(237, 237, 237);
@@ -147,20 +296,23 @@ export default {
   }
   button {
     display: block;
-    width: 90%;
-    height: 3rem;
     border-collapse: collapse;
     box-sizing: border-box;
-    background-color: #28C745;
+    background-color: #45D745;
     font-size: 13px;
     border-radius: 3px;
-    border: 1px solid rgb(200, 219, 200);
-    border-image: initial;
-    padding: 5px 0px 5px 10px;
+    border: none;
+    padding: 5px 15px 5px 15px;
     margin-top: 10px;
     font-weight: bold;
     color: white;
-    font-size: 1.25rem;
+    font-size: 1rem;
+  }
+  button:hover {
+    background-color: #55E755;
+  }
+  button:active {
+    background-color: #35C735;
   }
   textarea {
     resize: none;
@@ -173,6 +325,7 @@ export default {
     font-size: 15px;
     border-radius: 3px;
     border: none;
+    height: 45px;
     padding: 11px 0px 12px 10px;
     word-wrap: break-word;
   }
@@ -199,5 +352,84 @@ export default {
   .input-answer:focus, .input-answer-detail:focus {
     background-color: #EDEDED;
     border: none;
+  }
+  .input-hashtag {
+    background-color: #FFF;
+    border: none;
+  }
+  .input-hashtag:focus {
+    background-color: #EDEDED;
+  }
+  .hashtag {
+    display: block;
+    padding: .25rem .5rem .25rem .5rem;
+    margin: .25rem .25rem .35rem .25rem;
+    border-radius: .75rem;
+    font-weight: 500;
+    background-color:#E0E2E3;
+  }
+  .img-delete-hashtag {
+    height: 1rem;
+    margin: 0;
+  }
+  .text-hashtag {
+    display: block;
+    float:left;
+    font-size: .8rem;
+  }
+  .delete-hashtag {
+    width: 1rem;
+    height: 1rem;
+    margin: .1rem -.2rem 0rem .35rem;
+    background-image: url('../assets/letter-x.svg');
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    display: block;
+    float: left;
+  }
+  .delete-hashtag:hover {
+    background-color:#C0C2A3;
+  }
+  .reference {
+    display: block;
+    padding: .25rem .5rem .25rem .5rem;
+    margin: .25rem .25rem .35rem .25rem;
+    border-radius: .75rem;
+    font-weight: 500;
+    background-color:#B0FAB0;
+  }
+  .text-reference {
+    display: block;
+    float:left;
+    font-size: .8rem;
+    text-decoration: none;
+  }
+  .text-reference a {
+    color: #20CA20;
+  }
+  .delete-reference {
+    width: 1rem;
+    height: 1rem;
+    margin: .1rem -.2rem 0rem .35rem;
+    background-image: url('../assets/letter-x-green.svg');
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    display: block;
+    float: left;
+  }
+  .delete-reference:hover {
+    background-color: #60EA60;
+  }
+  .input-reference {
+    background-color: #B0FAB0;
+    border: none;
+    color: #20CA20;
+  }
+  .input-reference::placeholder {
+    color: #20CA20;
   }
 </style>

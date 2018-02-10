@@ -6,7 +6,9 @@
       </div>
       <div class="question col row align-items-center">
         Why does do doing else you are doing ?
-        <img src="../assets/pencil.svg" class="btn-write" v-on:click="$emit('write')">
+        <router-link :to="{ name: 'Write', params: { }}">
+          <img src="../assets/pencil.svg" class="btn-write">
+        </router-link>
       </div>
     </div>
     <div class="container-answer row">
