@@ -1,18 +1,15 @@
 <template>
   <div class="index">
-    <Header/>
-    <Body/>
+    <Show/>
   </div>
 </template>
 
 <script>
-import Header from './Header'
-import Body from './Body'
+import Show from './Show'
 export default {
   name: 'Index',
   components: {
-    Body,
-    Header
+    Show
   }
 }
 </script>
