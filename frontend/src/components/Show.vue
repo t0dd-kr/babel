@@ -6,13 +6,13 @@
     <div class="show container-fluid">
       <div class="row">
         <div class="col-2">
-          <router-link v-if="card.parent" :to="{ name: 'Show', params: { id: card.parent._id}}">
+          <a class="link-container-card-parent" v-if="card.parent" :href="'/show/' + card.parent._id">
             <div class="container-card-parent row justify-content-center">
               <CardParent
                 v-bind:card="card.parent"
               />
             </div>
-          </router-link>
+          </a>
           <div class="darken"></div>
         </div>
         <div class="col-5">
@@ -24,13 +24,13 @@
           </div>
         </div>
         <div class="container-children col-3">
-          <router-link v-for="child in card.children" v-bind:key="child._id" v-if="child" :to="{ name: 'Show', params: { id: child._id}}" >
+          <a v-for="child in card.children" v-bind:key="child._id" v-if="child" :href="'/show/' + child._id" >
             <div class="container-card-children row justify-content-center">
               <CardChildren
                 v-bind:card="child"
               />
             </div>
-          </router-link>
+          </a>
         </div>
         <div class="col-2">
           <div class="container-card-grandson row justify-content-center">
@@ -72,6 +72,20 @@ export default {
         })
     }
   },
+  beforeRouteUpdate (to) {
+    this.$http.get(`/api/cards/${to.params.id}`)
+      .then((res) => {
+        if (res.data !== '') {
+          this.card = res.data
+          console.log(this.card.children)
+        } else {
+          this.$router.push('/')
+        }
+      })
+      .catch((res) => {
+        this.$router.push('/')
+      })
+  },
   data () {
     return {
       card: null,
@@ -104,15 +118,16 @@ export default {
     left: 0px;
     width: 0%;
     height: 0%;
+    z-index: -1;
     transition: background-color .25s;
   }
   .container-card-parent:hover {
     left: 5%;
   }
-  .container-card-parent:hover + .darken{
+  .link-container-card-parent:hover + .darken{
     background-color: rgba(0,0,0,0.3);
-    z-index: 10;
     width: 100%;
     height: 100%;
+    z-index: 10;
   }
 </style>

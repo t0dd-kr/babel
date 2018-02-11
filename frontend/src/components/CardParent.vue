@@ -12,7 +12,7 @@
       <div class="left-answer col-3 row justify-content-center align-items-center">
         A.
       </div>
-      <ol v-if="false" class="col row align-items-center">
+      <ol v-if="card.is_ordered" class="col row align-items-center">
         <li v-for="(answer, index) in card.answers" class="col-12 answer" v-bind:key="index">
           <div class="text-answer">
             {{answer}}

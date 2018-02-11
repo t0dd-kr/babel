@@ -18,51 +18,104 @@ router.get('/users', (req, res, next) => {
 
 router.get('/cards/:id', (req, res, next) => {
   if(req.params.id) {
-    Card.findOne({_id: req.params.id}).populate('parent').exec((err, card) => {
-      if(err) {
-        console.log('load users err');
-        res.send({});
-      }
-      else {
-        Card.find({parent: req.params.id}, (err,cards) => {
+    if(req.params.id != 'random') {
+      Card.findOne({_id: req.params.id}).populate('parent').exec((err, card) => {
+        if(err) {
+          console.log('load cards err');
+          res.send({});
+        }
+        else {
+          Card.find({parent: req.params.id}, (err,cards) => {
+            if(err) {
+              console.log('load cards err');
+              var c = {
+                user: card.user,
+                question: card.question,
+                answers: card.answers,
+                answer_details: card.answer_details,
+                change_request: card.change_request,
+                parent: card.parent,
+                children: [],
+                children_count: card.children_count,
+                hashtags: card.hashtags,
+                references: card.references,
+                is_ordered: card.is_ordered,
+                _id: card._id
+              }
+              res.send(c);
+            }
+            else {
+              var c = {
+                user: card.user,
+                question: card.question,
+                answers: card.answers,
+                answer_details: card.answer_details,
+                change_request: card.change_request,
+                parent: card.parent,
+                children: cards,
+                children_count: card.children_count,
+                hashtags: card.hashtags,
+                references: card.references,
+                is_ordered: card.is_ordered,
+                _id: card._id
+              }
+              res.send(c);
+            }
+          })
+        }
+      });
+    } else {
+      Card.count().exec((err, count) => {
+        var random = Math.floor(Math.random() * count);
+
+        Card.findOne().skip(random).exec((err, card) => {
           if(err) {
-            console.log('load users err');
-            var c = {
-              user: card.user,
-              question: card.question,
-              answers: card.answers,
-              answer_details: card.answer_details,
-              change_request: card.change_request,
-              parent: card.parent,
-              children: [],
-              children_count: card.children_count,
-              hashtags: card.hashtags,
-              references: card.references,
-              is_ordered: card.is_ordered,
-              _id: card._id
+            console.log(err)
+            res.send({});
+          } else {
+            if(card) {
+              Card.find({parent: req.params.id}, (err,cards) => {
+                if(err) {
+                  console.log('load cards err');
+                  var c = {
+                    user: card.user,
+                    question: card.question,
+                    answers: card.answers,
+                    answer_details: card.answer_details,
+                    change_request: card.change_request,
+                    parent: card.parent,
+                    children: [],
+                    children_count: card.children_count,
+                    hashtags: card.hashtags,
+                    references: card.references,
+                    is_ordered: card.is_ordered,
+                    _id: card._id
+                  }
+                  res.send(c);
+                }
+                else {
+                  var c = {
+                    user: card.user,
+                    question: card.question,
+                    answers: card.answers,
+                    answer_details: card.answer_details,
+                    change_request: card.change_request,
+                    parent: card.parent,
+                    children: cards,
+                    children_count: card.children_count,
+                    hashtags: card.hashtags,
+                    references: card.references,
+                    is_ordered: card.is_ordered,
+                    _id: card._id
+                  }
+                  res.send(c);
+                }
+              })
             }
-            res.send(c);
-          }
-          else {
-            var c = {
-              user: card.user,
-              question: card.question,
-              answers: card.answers,
-              answer_details: card.answer_details,
-              change_request: card.change_request,
-              parent: card.parent,
-              children: cards,
-              children_count: card.children_count,
-              hashtags: card.hashtags,
-              references: card.references,
-              is_ordered: card.is_ordered,
-              _id: card._id
-            }
-            res.send(c);
           }
         })
-      }
-    });
+      })
+    }
   }
 });
 
@@ -75,6 +128,7 @@ router.post('/card', (req, res, next) => {
     else {
       if(cards.length == 0)
       {
+        Card.updateOne({_id: req.body.parent}, {$inc: {children_count:1}});
         new Card({
           user: req.body.user_id,
           question: req.body.question,

@@ -6,7 +6,7 @@
     <div class="write container-fluid">
       <div class="row">
         <div class="col-2">
-          <router-link v-if="card_parent" :to="{ name: 'Show', params: { id: card_parent._id}}">
+          <router-link class="link-container-card-parent" v-if="card_parent" :to="{ name: 'Show', params: { id: card_parent._id}}">
             <div class="container-card-parent row justify-content-center">
               <CardParent
                 v-bind:card="card_parent"
@@ -99,7 +99,7 @@ export default {
   .container-card-parent:hover {
     left: 5%;
   }
-  .container-card-parent:hover + .darken {
+  .link-container-card-parent:hover + .darken {
     background-color: rgba(0,0,0,0.3);
     width: 100%;
     height: 100%;
