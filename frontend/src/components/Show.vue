@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="container-children col-3">
-          <a v-for="child in card.children" v-bind:key="child._id" v-if="child" :href="'/show/' + child._id" >
+          <a v-for="child in card.children" v-bind:key="child._id" v-if="child" :href="'/show/' + child._id" class="link-container-card-children">
             <div class="container-card-children row justify-content-center">
               <CardChildren
                 v-bind:card="child"
@@ -77,7 +77,6 @@ export default {
       .then((res) => {
         if (res.data !== '') {
           this.card = res.data
-          console.log(this.card.children)
         } else {
           this.$router.push('/')
         }
@@ -104,6 +103,9 @@ export default {
   }
   .container-card-children {
     margin-bottom: 1rem;
+  }
+  .link-container-card-children {
+    text-decoration: none;
   }
   .container-card-parent {
     position:absolute;

@@ -21,16 +21,16 @@
                 <div class="col">
                   <form>
                     <div class="answer">
-                      <input v-model="name" type="text" name="name" value="" placeholder="name">
+                      <input v-model="name" type="text" name="name" value="" placeholder="name" v-on:keydown="($event) => { if ($event.keyCode === 13) { join() } }">
                     </div>
                     <div class="answer">
-                      <input v-model="email" type="email" name="email" value="" placeholder="e-mail">
+                      <input v-model="email" type="email" name="email" value="" placeholder="e-mail" v-on:keydown="($event) => { if ($event.keyCode === 13) { join() } }">
                     </div>
                     <div class="answer">
-                      <input v-model="password" type="password" name="password" value="" placeholder="password">
+                      <input v-model="password" type="password" name="password" value="" placeholder="password" v-on:keydown="($event) => { if ($event.keyCode === 13) { join() } }">
                     </div>
                     <div class="answer">
-                      <input v-model="password_confirm" type="password" name="password-confirm" value="" placeholder="contirm password">
+                      <input v-model="password_confirm" type="password" name="password-confirm" value="" placeholder="contirm password" v-on:keydown="($event) => { if ($event.keyCode === 13) { join() } }">
                     </div>
                     <div class="answer">
                       <button type="button" v-on:click="join">Sign Up</button>
@@ -41,7 +41,7 @@
             </div>
             <div class="container-error col-12 row justify-content-center">
               <div class="error-notice row">
-                0 error occured
+                {{error}}
               </div>
             </div>
           </div>
@@ -60,8 +60,15 @@ export default {
   },
   methods: {
     join: function () {
-      if (this.password === this.password_confirm) {
-        console.log('join')
+      if (this.name === '') {
+        this.errorcode = 1
+      } else if (this.email === '') {
+        this.errorcode = 2
+      } else if (this.password === '') {
+        this.errorcode = 3
+      } else if (this.password_confirm === '') {
+        this.errorcode = 4
+      } else if (this.password === this.password_confirm) {
         this.$http.post('/auth/join', {
           email: this.email,
           password: this.password,
@@ -88,6 +95,22 @@ export default {
       email: '',
       password: '',
       password_confirm: ''
+    }
+  },
+  computed: {
+    error: function () {
+      switch (this.errorcode) {
+        case 0:
+          return '0 error occured'
+        case 1:
+          return 'error occured: name required'
+        case 2:
+          return 'error occured: e-mail required'
+        case 3:
+          return 'error occured: password required'
+        case 4:
+          return 'error occured: confirm password required'
+      }
     }
   }
 }

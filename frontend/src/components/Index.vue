@@ -9,7 +9,6 @@ export default {
   beforeCreate () {
     this.$http.get('/api/cards/random')
       .then((res) => {
-        console.log(res.data)
         var id = res.data._id
         this.$router.push('/show/' + id)
       })

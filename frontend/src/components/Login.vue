@@ -20,10 +20,10 @@
               <div class="col-9 row align-items-center">
                 <div class="col">
                   <div class="answer">
-                    <input v-model="email" type="email" name="email" value="" placeholder="e-mail">
+                    <input v-model="email" type="email" name="email" value="" placeholder="e-mail" :keydown="($event) => { if ($event.keyCode === 13) { login() } }">
                   </div>
                   <div class="answer">
-                    <input v-model="password" type="password" name="password" value="" placeholder="password">
+                    <input v-model="password" type="password" name="password" value="" placeholder="password" :keydown="($event) => { if ($event.keyCode === 13) { login() } }">
                   </div>
                   <div class="answer">
                     <button type="button" v-on:click="login">Sign in</button>
