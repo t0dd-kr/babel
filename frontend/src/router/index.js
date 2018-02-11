@@ -27,12 +27,12 @@ export default new Router({
       component: Join
     },
     {
-      path: '/show',
+      path: '/show/:id',
       name: 'Show',
       component: Show
     },
     {
-      path: '/write',
+      path: '/write/:id',
       name: 'Write',
       component: Write
     }

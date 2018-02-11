@@ -1,38 +1,48 @@
 <template lang="html">
-  <div class="card-parent">
+  <div v-if="card" class="card-parent">
     <div class="container-question row">
       <div class="left-question col-3 row justify-content-center align-items-center">
         Q.
       </div>
       <div class="question col row align-items-center">
-        Why does do doing else you are doing ?
+        {{card.question}}
       </div>
     </div>
     <div class="container-answer row">
       <div class="left-answer col-3 row justify-content-center align-items-center">
         A.
       </div>
-      <div class="col-9 row align-items-center">
-        <div class="col">
-          <div v-for="n in 3" class="answer row" v-bind:key="n">
-            {{ n }}. hihihi
+      <ol v-if="false" class="col row align-items-center">
+        <li v-for="(answer, index) in card.answers" class="col-12 answer" v-bind:key="index">
+          <div class="text-answer">
+            {{answer}}
           </div>
-        </div>
-      </div>
+        </li>
+      </ol>
+      <ul v-else class="col row align-items-center">
+        <li v-for="(answer, index) in card.answers" class="col-12 answer" v-bind:key="index">
+          <div class="text-answer">
+            {{answer}}
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CardParent'
+  name: 'CardParent',
+  props: {
+    card: Object
+  }
 }
 </script>
 
 <style scoped>
   .card-parent {
     font-size: .75rem;
-    z-index: 1;
+    z-index: 100;
     display: block;
     width: 90%;
     color: black;
@@ -55,11 +65,17 @@ export default {
     font-size: 1.75rem;
   }
   .answer {
+    padding: 0;
     padding-top: .2rem;
     padding-bottom: .3rem;
-    padding-left: .5rem;
   }
   .question {
-    padding-left: 1.5rem;
+    font-size: 1rem;
+  }
+  ol, ul {
+    margin: 0;
+  }
+  li, li textarea, li input{
+    float: left;
   }
 </style>

@@ -18,7 +18,7 @@ router.get('/users', (req, res, next) => {
 
 router.get('/cards/:id', (req, res, next) => {
   if(req.params.id) {
-    Card.findOne({_id: req.params.id}, (err, card) => {
+    Card.findOne({_id: req.params.id}).populate('parent').exec((err, card) => {
       if(err) {
         console.log('load users err');
         res.send({});
@@ -27,12 +27,38 @@ router.get('/cards/:id', (req, res, next) => {
         Card.find({parent: req.params.id}, (err,cards) => {
           if(err) {
             console.log('load users err');
-            card.children = [];
-            res.send(card);
+            var c = {
+              user: card.user,
+              question: card.question,
+              answers: card.answers,
+              answer_details: card.answer_details,
+              change_request: card.change_request,
+              parent: card.parent,
+              children: [],
+              children_count: card.children_count,
+              hashtags: card.hashtags,
+              references: card.references,
+              is_ordered: card.is_ordered,
+              _id: card._id
+            }
+            res.send(c);
           }
           else {
-            card.children = cards;
-            res.send(card);
+            var c = {
+              user: card.user,
+              question: card.question,
+              answers: card.answers,
+              answer_details: card.answer_details,
+              change_request: card.change_request,
+              parent: card.parent,
+              children: cards,
+              children_count: card.children_count,
+              hashtags: card.hashtags,
+              references: card.references,
+              is_ordered: card.is_ordered,
+              _id: card._id
+            }
+            res.send(c);
           }
         })
       }
@@ -44,10 +70,10 @@ router.post('/card', (req, res, next) => {
   Card.find({question: req.body.question}, (err, cards) => {
     if(err) {
       console.log('load cards err');
-      res.json({});
+      res.json({status:false, message:'Saving card failed: db error'});
     }
     else {
-      if(cards == [])
+      if(cards.length == 0)
       {
         new Card({
           user: req.body.user_id,
@@ -60,14 +86,19 @@ router.post('/card', (req, res, next) => {
           hashtags: req.body.hashtags,
           references: req.body.references,
           is_ordered: req.body.is_ordered
-        }).save((err,card) => {
+        }).save((err, card) => {
           if(err) {
-            res.json({status:false, message:'save card failed'});
+            console.log('card save err:' + err)
+            res.json({status:false, message:'Saving card failed: db error'});
           }
           else {
-            res.json({status:true, message: '', id:card._id});
+            console.log('card save success')
+            res.json({status:true, message: '', id: card._id});
           }
         });
+      }
+      else {
+        res.json({status:false, message:'Saving card failed: question duplicated.'})
       }
     }
   });

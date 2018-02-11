@@ -44,6 +44,7 @@ export default {
           this.authorized = true
           this.user_name = res.data.name
           this.user_id = res.data._id
+          this.$emit('authorized', res.data._id)
         } else {
           this.authorized = false
         }

@@ -1,23 +1,36 @@
 <template>
-  <div class="container-show">
-    <Header/>
+  <div v-if="card" class="container-show">
+    <Header
+      v-on:authorized="(id) => user_id = id"
+    />
     <div class="show container-fluid">
       <div class="row">
         <div class="col-2">
-          <div class="container-card-parent row justify-content-center">
-            <CardParent/>
-          </div>
+          <router-link v-if="card.parent" :to="{ name: 'Show', params: { id: card.parent._id}}">
+            <div class="container-card-parent row justify-content-center">
+              <CardParent
+                v-bind:card="card.parent"
+              />
+            </div>
+          </router-link>
           <div class="darken"></div>
         </div>
         <div class="col-5">
           <div class="container-card-main row justify-content-center">
-            <CardMain/>
+            <CardMain
+              v-bind:card="card"
+              v-bind:authorized="user_id !== ''"
+            />
           </div>
         </div>
         <div class="container-children col-3">
-          <div class="container-card-children row justify-content-center" v-for="n in 10" v-bind:key="n">
-            <CardChildren/>
-          </div>
+          <router-link v-for="child in card.children" v-bind:key="child._id" v-if="child" :to="{ name: 'Show', params: { id: child._id}}" >
+            <div class="container-card-children row justify-content-center">
+              <CardChildren
+                v-bind:card="child"
+              />
+            </div>
+          </router-link>
         </div>
         <div class="col-2">
           <div class="container-card-grandson row justify-content-center">
@@ -43,6 +56,27 @@ export default {
     CardMain,
     CardChildren,
     CardGrandson
+  },
+  beforeCreate () {
+    if (this.$route.params.id) {
+      this.$http.get(`/api/cards/${this.$route.params.id}`)
+        .then((res) => {
+          if (res.data !== '') {
+            this.card = res.data
+          } else {
+            this.$router.push('/')
+          }
+        })
+        .catch((res) => {
+          this.$router.push('/')
+        })
+    }
+  },
+  data () {
+    return {
+      card: null,
+      user_id: ''
+    }
   }
 }
 </script>
@@ -61,7 +95,7 @@ export default {
     position:absolute;
     width: 150%;
     left: -50%;
-    z-index: 10;
+    z-index: 100;
     transition: left .25s
   }
   .darken {
@@ -76,8 +110,8 @@ export default {
     left: 5%;
   }
   .container-card-parent:hover + .darken{
-    background-color: rgba(0,0,0,0.25);
-    z-index: 9;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 10;
     width: 100%;
     height: 100%;
   }
