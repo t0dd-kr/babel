@@ -119,6 +119,22 @@ router.get('/cards/:id', (req, res, next) => {
   }
 });
 
+router.get('/cards/:id/children', (req, res, next) => {
+  if(req.params.id) {
+    if(req.params.id != 'random') {
+      Card.find({parent: req.params.id}, (err,cards) => {
+        if(err) {
+          console.log('load cards err');
+          res.send([]);
+        }
+        else {
+          res.send(cards);
+        }
+      })
+    }
+  }
+});
+
 router.post('/card', (req, res, next) => {
   Card.find({question: req.body.question}, (err, cards) => {
     if(err) {

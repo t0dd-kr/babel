@@ -100,7 +100,7 @@ export default {
     left: 5%;
   }
   .link-container-card-parent:hover + .darken {
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.5);
     width: 100%;
     height: 100%;
     z-index: 10;

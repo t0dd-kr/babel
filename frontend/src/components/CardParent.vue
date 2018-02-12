@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="card" class="card-parent">
+  <div v-if="card" class="card-parent" :style="{zIndex: zIndex}">
     <div class="container-question row">
       <div class="left-question col-3 row justify-content-center align-items-center">
         Q.
@@ -34,7 +34,8 @@
 export default {
   name: 'CardParent',
   props: {
-    card: Object
+    card: Object,
+    zIndex: Number
   }
 }
 </script>
@@ -42,7 +43,6 @@ export default {
 <style scoped>
   .card-parent {
     font-size: .75rem;
-    z-index: 100;
     display: block;
     width: 90%;
     color: black;
