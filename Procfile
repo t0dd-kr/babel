@@ -1,1 +1,1 @@
-web: cd ./backend && npm install && cd ../frontend && npm install && node ../backend/bin/www
+web: node ../backend/bin/www
