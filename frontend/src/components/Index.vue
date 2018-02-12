@@ -21,6 +21,7 @@ export default {
       .then((res) => {
         var card = res.data
         if (card !== {}) {
+          console.log(card)
           var id = card._id
           this.$router.push('/show/' + id)
         }
