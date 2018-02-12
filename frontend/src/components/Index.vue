@@ -19,10 +19,8 @@ export default {
   beforeCreate () {
     this.$http.get('/api/cards/random')
       .then((res) => {
-        var card = res.data
-        if (card !== {}) {
-          console.log(card)
-          var id = card._id
+        var id = res.data._id
+        if (id !== undefined) {
           this.$router.push('/show/' + id)
         }
       })
