@@ -1,15 +1,16 @@
 <template>
   <div class="container-write">
     <Header
-      v-on:authorized="(id) => user_id = id"
+      @authorized="(id) => user_id = id"
     />
     <div class="write container-fluid">
+      <canvas id="canvas"></canvas>
       <div class="row">
         <div class="col-2">
           <router-link class="link-container-card-parent" v-if="card_parent" :to="{ name: 'Show', params: { id: card_parent._id}}">
             <div class="container-card-parent row justify-content-center">
               <CardParent
-                v-bind:card="card_parent"
+                :card="card_parent"
               />
             </div>
           </router-link>
@@ -18,8 +19,8 @@
         <div class="col-5">
           <div class="container-card-main row justify-content-center">
             <CardWrite
-              v-bind:card_parent="card_parent"
-              v-bind:user_id="user_id"
+              :card_parent="card_parent"
+              :user_id="user_id"
             />
           </div>
         </div>
@@ -49,7 +50,10 @@ export default {
   data () {
     return {
       user_id: '',
-      card_parent: null
+      card_parent: null,
+      parentRect: null,
+      selfRect: null,
+      drawing: false
     }
   },
   beforeCreate () {
@@ -65,6 +69,43 @@ export default {
         .catch((res) => {
           this.card_parent = null
         })
+    }
+  },
+  updated () {
+    if (!this.drawing) {
+      var parent = window.$('.card-parent')
+      var self = window.$('.card-write')
+      this.selfRect = self[0].getBoundingClientRect()
+      if (parent.length > 0) {
+        this.parentRect = parent[0].getBoundingClientRect()
+      } else {
+        this.parentRect = null
+      }
+      this.draw()
+      this.drawing = true
+    }
+  },
+  methods: {
+    draw: function () {
+      var canvas = window.$('#canvas')[0]
+      var ctx = canvas !== undefined ? canvas.getContext('2d') : null
+      if (ctx) {
+        var headerTop = window.$('container-header')[0] !== undefined ? window.$('container-header')[0].getBoundingClientRect().top : 56
+        canvas.width = canvas.offsetWidth
+        canvas.height = canvas.offsetHeight
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.strokeStyle = 'rgb(255,255,255)'
+        ctx.lineWidth = 2
+        if (this.parentRect !== null) {
+          ctx.beginPath()
+          ctx.moveTo(this.parentRect.right, -headerTop + (this.parentRect.top + this.parentRect.bottom) / 2)
+          ctx.lineTo((this.parentRect.right + this.selfRect.left) / 2, -headerTop + (this.parentRect.top + this.parentRect.bottom) / 2)
+          ctx.lineTo((this.parentRect.right + this.selfRect.left) / 2, -headerTop + (this.selfRect.top + this.selfRect.bottom) / 2)
+          ctx.lineTo(this.selfRect.left, -headerTop + (this.selfRect.top + this.selfRect.bottom) / 2)
+          ctx.stroke()
+        }
+      }
+      requestAnimationFrame(this.draw)
     }
   }
 }
@@ -104,5 +145,12 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 10;
+  }
+  #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 </style>

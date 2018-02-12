@@ -20,10 +20,10 @@
               <div class="col-9 row align-items-center">
                 <div class="col">
                   <div class="answer">
-                    <input v-model="email" type="email" name="email" value="" placeholder="e-mail" :keydown="($event) => { if ($event.keyCode === 13) { login() } }">
+                    <input v-model="email" type="email" name="email" value="" placeholder="e-mail" @keydown="($event) => { if ($event.keyCode === 13) { login() } }">
                   </div>
                   <div class="answer">
-                    <input v-model="password" type="password" name="password" value="" placeholder="password" :keydown="($event) => { if ($event.keyCode === 13) { login() } }">
+                    <input v-model="password" type="password" name="password" value="" placeholder="password" @keydown="($event) => { if ($event.keyCode === 13) { login() } }">
                   </div>
                   <div class="answer">
                     <button type="button" v-on:click="login">Sign in</button>
@@ -52,21 +52,27 @@ export default {
   },
   methods: {
     login: function () {
-      this.$http.post('/auth/login', {
-        email: this.email,
-        password: this.password
-      })
-        .then((res) => {
-          if (res.data.status) {
-            this.$router.push('/')
-          } else {
-            // alert(res.data.message)
-            this.errorcode = res.data.message
-          }
+      if (this.email === '') {
+        this.errorcode = 3
+      } else if (this.password === '') {
+        this.errorcode = 4
+      } else {
+        this.$http.post('/auth/login', {
+          email: this.email,
+          password: this.password
         })
-        .catch((res) => {
-          console.log(res)
-        })
+          .then((res) => {
+            if (res.data.status) {
+              this.$router.push('/')
+            } else {
+              // alert(res.data.message)
+              this.errorcode = res.data.message
+            }
+          })
+          .catch((res) => {
+            console.log(res)
+          })
+      }
     }
   },
   data () {
@@ -85,6 +91,10 @@ export default {
           return 'error occured: Wrong e-mail'
         case 2:
           return 'error occured: Wrong password'
+        case 3:
+          return 'error occured: please fill up e-mail'
+        case 4:
+          return 'error occured: please fill up password'
       }
     }
   }
