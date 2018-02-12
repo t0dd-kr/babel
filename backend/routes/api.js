@@ -4,6 +4,24 @@ const User = require('../models/userSchema');
 const Card = require('../models/cardSchema');
 
 // /* GET users listing. */
+function setCardChildren(card, children) {
+  var c = {
+    user: card.user,
+    question: card.question,
+    answers: card.answers,
+    answer_details: card.answer_details,
+    change_request: card.change_request,
+    parent: card.parent,
+    children: children,
+    children_count: card.children_count,
+    hashtags: card.hashtags,
+    references: card.references,
+    is_ordered: card.is_ordered,
+    _id: card._id
+  }
+  return c;
+}
+
 router.get('/users', (req, res, next) => {
   User.find((err, users) => {
     if(err) {
@@ -18,7 +36,57 @@ router.get('/users', (req, res, next) => {
 
 router.get('/cards/:id', (req, res, next) => {
   if(req.params.id) {
-    if(req.params.id != 'random') {
+    if(req.params.id == 'root') {
+      Card.find({parent: null}, (err, cards) => {
+        if(err) {
+          console.log(err);
+          res.send([]);
+          return err;
+        } else {
+          if(cards) {
+            var c = [];
+            cards.forEach((card) => {
+              Card.find({parent: card._id}, (err, children) => {
+                if(err) {
+                  console.log('load cards err');
+                  c.push(setCardChildren(card, []));
+                }
+                else {
+                  c.push(setCardChildren(card, children));
+                  if(card._id === cards[cards.length-1]._id) {
+                    res.send(c);
+                  }
+                }
+              })
+            })
+          }
+        }
+      })
+    } else if(req.params.id == 'random') {
+      Card.count().exec((err, count) => {
+        var random = Math.floor(Math.random() * count);
+        Card.findOne().skip(random).exec((err, card) => {
+          if(err) {
+            console.log(err)
+            res.send({});
+          } else {
+            if(card) {
+              Card.find({parent: req.params.id}, (err,cards) => {
+                if(err) {
+                  console.log('load cards err');
+                  res.send(setCardChildren(card, []));
+                }
+                else {
+                  res.send(setCardChildren(card, cards));
+                }
+              })
+            } else {
+              res.send({});
+            }
+          }
+        })
+      })
+    } else {
       Card.findOne({_id: req.params.id}).populate('parent').exec((err, card) => {
         if(err) {
           console.log('load cards err');
@@ -64,57 +132,6 @@ router.get('/cards/:id', (req, res, next) => {
           })
         }
       });
-    } else {
-      Card.count().exec((err, count) => {
-        var random = Math.floor(Math.random() * count);
-
-        Card.findOne().skip(random).exec((err, card) => {
-          if(err) {
-            console.log(err)
-            res.send({});
-          } else {
-            if(card) {
-              Card.find({parent: req.params.id}, (err,cards) => {
-                if(err) {
-                  console.log('load cards err');
-                  var c = {
-                    user: card.user,
-                    question: card.question,
-                    answers: card.answers,
-                    answer_details: card.answer_details,
-                    change_request: card.change_request,
-                    parent: card.parent,
-                    children: [],
-                    children_count: card.children_count,
-                    hashtags: card.hashtags,
-                    references: card.references,
-                    is_ordered: card.is_ordered,
-                    _id: card._id
-                  }
-                  res.send(c);
-                }
-                else {
-                  var c = {
-                    user: card.user,
-                    question: card.question,
-                    answers: card.answers,
-                    answer_details: card.answer_details,
-                    change_request: card.change_request,
-                    parent: card.parent,
-                    children: cards,
-                    children_count: card.children_count,
-                    hashtags: card.hashtags,
-                    references: card.references,
-                    is_ordered: card.is_ordered,
-                    _id: card._id
-                  }
-                  res.send(c);
-                }
-              })
-            }
-          }
-        })
-      })
     }
   }
 });

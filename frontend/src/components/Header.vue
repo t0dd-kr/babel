@@ -1,13 +1,19 @@
 <template lang="html">
   <div class="container-fluid container-header" role="banner">
     <div class="d-flex px-3 flex-justify-between container-lg row align-items-center">
-      <div class="container-search col-2">
+      <div class="container-search col-3">
         <input type="text" class="search" name="" value="" placeholder="Search">
-        <a href="#" class="container-btn-search">
+        <a href="javascript:;" class="container-btn-search">
           <img src="../assets/search.svg" class="btn-search">
         </a>
+        <router-link class="link-btn-write" :to="{ name: 'Write', params: {id: 'new'}}" v-if="authorized">
+          <img src="../assets/pencil.svg" class="btn-write">
+        </router-link>
+        <router-link class="link-btn-write" :to="{ name: 'Login' }" v-else>
+          <img src="../assets/pencil.svg" class="btn-write">
+        </router-link>
       </div>
-      <div class="col-8 row justify-content-center align-items-center">
+      <div class="col-7 row justify-content-center align-items-center">
         <router-link :to="{ name: 'Index'}" class="link">
           <img src="../assets/logo.png" class="logo" alt="">
         </router-link>
@@ -136,5 +142,15 @@ export default {
   .logout {
     height: 1rem;
     margin-left: .75rem;
+  }
+  .btn-write {
+    background-image: url('../assets/pencil.svg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .link-btn-write {
+    padding-left: .5rem;
   }
 </style>

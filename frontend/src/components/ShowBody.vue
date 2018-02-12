@@ -1,8 +1,8 @@
 <template>
-  <div v-if="card" class="container-show">
+  <div class="container-show">
     <div class="show container-fluid">
       <canvas id="canvas"></canvas>
-      <div class="row">
+      <div v-if="card" class="row">
         <div class="col-2">
           <a class="link-container-card-parent" v-if="card.parent" :href="'/show/' + card.parent._id">
             <div class="container-card-parent row justify-content-center">
@@ -57,48 +57,10 @@ export default {
     CardChildren,
     CardGrandson
   },
-  beforeCreate () {
-    if (this.$route.params.id) {
-      this.$http.get(`/api/cards/${this.$route.params.id}`)
-        .then((res) => {
-          if (res.data !== '') {
-            this.card = res.data
-            this.zIndexChildren = new Array(this.card.length)
-            for (var j = 0; j < this.zIndexChildren.length; j++) {
-              this.zIndexChildren[j] = 0
-            }
-          } else {
-            this.$router.push('/')
-          }
-        })
-        .catch((res) => {
-          this.$router.push('/')
-        })
-    }
-  },
-  beforeRouteUpdate (to) {
-    this.$http.get(`/api/cards/${to.params.id}`)
-      .then((res) => {
-        if (res.data !== '') {
-          this.card = res.data
-          this.zIndexChildren = new Array(this.card.length)
-          for (var j = 0; j < this.zIndexChildren.length; j++) {
-            this.zIndexChildren[j] = 0
-          }
-        } else {
-          this.$router.push('/')
-        }
-      })
-      .catch((res) => {
-        this.$router.push('/')
-      })
-  },
   data () {
     return {
-      card: null,
       grandsons: [],
       curChild: null,
-      zIndexChildren: [],
       zIndexParent: 1,
       parentRect: null,
       childrenRect: [],
@@ -108,7 +70,9 @@ export default {
     }
   },
   props: {
-    user_id: String
+    user_id: String,
+    zIndexChildren: Array,
+    card: Object
   },
   created () {
     window.addEventListener('mousemove', this.onMouseMove)
