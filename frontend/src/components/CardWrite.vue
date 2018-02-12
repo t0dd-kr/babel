@@ -204,8 +204,7 @@ export default {
         })
           .then((res) => {
             if (res.data.status) {
-              console.log(res.data.id)
-              this.$router.go('/show/' + res.data.id)
+              this.$router.push('/show/' + res.data.id)
             }
           })
           .catch((res) => {

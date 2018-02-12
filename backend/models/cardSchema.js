@@ -26,7 +26,7 @@ const cardSchema = new mongoose.Schema({
   change_request: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ChangeRequest' }],
   parent: {type: mongoose.Schema.Types.ObjectId, ref: 'Card', null: true},
   children_count: {type: Number, default: 0},
-  hashtags: [{type: String, trim: true, match: /([0-9a-zA-Zㄱ-힣]*)/g}],
+  hashtags: [{type: String, trim: true, match: /([0-9a-zA-Zㄱ-힣]*)/}],
   references: [{type: String, trim: true}],
   is_ordered: {type: Boolean, required: true},
   id: mongoose.Schema.Types.ObjectId

@@ -161,7 +161,9 @@ router.post('/card', (req, res, next) => {
     else {
       if(cards.length == 0)
       {
-        Card.updateOne({_id: req.body.parent}, {$inc: {children_count:1}});
+        if(req.body.parent != null) {
+          Card.updateOne({_id: req.body.parent}, {$inc: {children_count:1}});
+        }
         new Card({
           user: req.body.user_id,
           question: req.body.question,
