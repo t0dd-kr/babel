@@ -57,6 +57,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.card_parent = null
     if (this.$route.params.id !== 'new') {
       this.$http.get(`/api/cards/${this.$route.params.id}`)
         .then((res) => {
@@ -71,18 +72,20 @@ export default {
         })
     }
   },
-  updated () {
-    if (!this.drawing) {
-      var parent = window.$('.card-parent')
-      var self = window.$('.card-write')
-      this.selfRect = self[0].getBoundingClientRect()
-      if (parent.length > 0) {
-        this.parentRect = parent[0].getBoundingClientRect()
-      } else {
-        this.parentRect = null
-      }
-      this.draw()
-      this.drawing = true
+  beforeRouteUpdate () {
+    this.card_parent = null
+    if (this.$route.params.id !== 'new') {
+      this.$http.get(`/api/cards/${this.$route.params.id}`)
+        .then((res) => {
+          if (res.data !== '') {
+            this.card_parent = res.data
+          } else {
+            this.card_parent = null
+          }
+        })
+        .catch((res) => {
+          this.card_parent = null
+        })
     }
   },
   methods: {
@@ -106,6 +109,20 @@ export default {
         }
       }
       requestAnimationFrame(this.draw)
+    }
+  },
+  updated () {
+    if (!this.drawing || (this.parentRect === null && this.card_parent !== null)) {
+      var parent = window.$('.card-parent')
+      var self = window.$('.card-write')
+      this.selfRect = self[0].getBoundingClientRect()
+      if (parent.length > 0) {
+        this.parentRect = parent[0].getBoundingClientRect()
+      } else {
+        this.parentRect = null
+      }
+      this.draw()
+      this.drawing = true
     }
   }
 }

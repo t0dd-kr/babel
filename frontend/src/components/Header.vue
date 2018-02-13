@@ -6,9 +6,9 @@
         <a href="javascript:;" class="container-btn-search">
           <img src="../assets/search.svg" class="btn-search">
         </a>
-        <router-link class="link-btn-write" :to="{ name: 'Write', params: {id: 'new'}}" v-if="authorized">
+        <a class="link-btn-write" href="/write/new" v-if="authorized">
           <img src="../assets/pencil.svg" class="btn-write">
-        </router-link>
+        </a>
         <router-link class="link-btn-write" :to="{ name: 'Login' }" v-else>
           <img src="../assets/pencil.svg" class="btn-write">
         </router-link>
