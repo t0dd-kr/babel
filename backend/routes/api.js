@@ -152,6 +152,35 @@ router.get('/cards/:id/children', (req, res, next) => {
   }
 });
 
+router.get('/cards/search/:text', (req, res, next) => {
+  if(req.params.id) {
+    if(req.params.id[0] == '#') {
+      Card.find({hashtags : $eleMatch: { new RegExp('^' + req.params.text.slice(1,-1) + '$', "i") }} , (err,cards) => {
+        if(err) {
+          console.log('load cards err');
+          res.send([]);
+        }
+        else {
+          res.send(cards);
+        }
+      })
+    } else {
+      Card.find( $or: {
+        {question: new RegExp('^' + req.params.text + '$', "i")},
+        {answer : $eleMatch: { new RegExp('^' + req.params.text + '$', "i") }}
+       }, (err,cards) => {
+        if(err) {
+          console.log('load cards err');
+          res.send([]);
+        }
+        else {
+          res.send(cards);
+        }
+      })
+    }
+  }
+});
+
 router.post('/card', (req, res, next) => {
   Card.find({question: req.body.question}, (err, cards) => {
     if(err) {

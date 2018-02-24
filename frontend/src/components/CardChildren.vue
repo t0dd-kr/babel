@@ -1,7 +1,7 @@
 <template lang="html">
   <div v-if="card" class="card-children" :style="{zIndex: zIndex}">
     <div class="container-question row">
-      <div class="left-question col-3 row justify-content-center align-items-center">
+      <div class="left-question row justify-content-center align-items-center">
         Q.
       </div>
       <div class="question col row align-items-center">
@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="container-answer row">
-      <div class="left-answer col-3 row justify-content-center align-items-center">
+      <div class="left-answer row justify-content-center align-items-center">
         A.
       </div>
       <ol v-if="card.is_ordered" class="col row align-items-center">
@@ -64,6 +64,7 @@ export default {
   }
   .left-question, .left-answer {
     font-size: 1.75rem;
+    width: 5rem;
   }
   .answer {
     padding: 0;

@@ -2,8 +2,8 @@
   <div class="container-fluid container-header" role="banner">
     <div class="d-flex px-3 flex-justify-between container-lg row align-items-center">
       <div class="container-search col-3">
-        <input type="text" class="search" name="" value="" placeholder="Search">
-        <a href="javascript:;" class="container-btn-search">
+        <input type="text" class="search" v-model="searchText" value="" placeholder="Search">
+        <a href="javascript:;" class="container-btn-search" v-on:click="search">
           <img src="../assets/search.svg" class="btn-search">
         </a>
         <a class="link-btn-write" href="/write/new" v-if="authorized">
@@ -68,13 +68,22 @@ export default {
         .catch((res) => {
           console.log(res)
         })
+    },
+    search: function () {
+      this.searchText = this.searchText.trim()
+      if (this.searchText.length >= 2) {
+        window.location.href = '/search/' + this.searchText
+      } else {
+        alert('More than 2 letters required to search.')
+      }
     }
   },
   data () {
     return {
       authorized: false,
       user_name: '',
-      user_id: ''
+      user_id: '',
+      searchText: ''
     }
   }
 }

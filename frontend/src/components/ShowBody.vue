@@ -50,7 +50,7 @@ import CardMain from './CardMain'
 import CardChildren from './CardChildren'
 import CardGrandson from './CardGrandson'
 export default {
-  name: 'Show',
+  name: 'ShowBody',
   components: {
     CardParent,
     CardMain,
