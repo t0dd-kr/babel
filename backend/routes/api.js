@@ -153,30 +153,39 @@ router.get('/cards/:id/children', (req, res, next) => {
 });
 
 router.get('/cards/search/:text', (req, res, next) => {
-  if(req.params.id) {
-    if(req.params.id[0] == '#') {
-      Card.find({hashtags : $eleMatch: { new RegExp('^' + req.params.text.slice(1,-1) + '$', "i") }} , (err,cards) => {
-        if(err) {
-          console.log('load cards err');
-          res.send([]);
-        }
-        else {
-          res.send(cards);
-        }
-      })
+  if(req.params.text) {
+    Card.find((err, cards) => {
+      if(err) return err;
+      if(cards.length > 0) {
+        res.send(cards);
+      }
+      else {
+        res.send([]);
+      }
+    })
+    if(req.params.text[0] == '#') {
+      // Card.find({hashtags : $eleMatch: { new RegExp('^' + req.params.text.slice(1,-1) + '$', "i") }} , (err,cards) => {
+      //   if(err) {
+      //     console.log('load cards err');
+      //     res.send([]);
+      //   }
+      //   else {
+      //     res.send(cards);
+      //   }
+      // })
     } else {
-      Card.find( $or: {
-        {question: new RegExp('^' + req.params.text + '$', "i")},
-        {answer : $eleMatch: { new RegExp('^' + req.params.text + '$', "i") }}
-       }, (err,cards) => {
-        if(err) {
-          console.log('load cards err');
-          res.send([]);
-        }
-        else {
-          res.send(cards);
-        }
-      })
+      // Card.find( $or: {
+      //   {question: new RegExp('^' + req.params.text + '$', "i")},
+      //   {answer : $eleMatch: { new RegExp('^' + req.params.text + '$', "i") }}
+      //  }, (err,cards) => {
+      //   if(err) {
+      //     console.log('load cards err');
+      //     res.send([]);
+      //   }
+      //   else {
+      //     res.send(cards);
+      //   }
+      // })
     }
   }
 });

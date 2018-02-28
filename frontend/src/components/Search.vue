@@ -27,7 +27,7 @@ export default {
     }
   },
   beforeCreate () {
-    if (this.$route.params.id) {
+    if (this.$route.params.text) {
       this.$http.get(`/api/cards/search/${this.$route.params.text}`)
         .then((res) => {
           if (res.data !== '') {
