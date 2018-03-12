@@ -160,10 +160,23 @@ export default {
     draw: function () {
       var canvas = window.$('#canvas')[0]
       var ctx = canvas !== undefined ? canvas.getContext('2d') : null
+      var children = window.$('.card-children')
+      var parent = window.$('.card-parent')
+      var self = window.$('.card-main')
+      this.childrenRect = []
+      this.selfRect = self[0].getBoundingClientRect()
+      for (var i = 0; i < children.length; i++) {
+        this.childrenRect.push(children[i].getBoundingClientRect())
+      }
+      if (parent.length > 0) {
+        this.parentRect = parent[0].getBoundingClientRect()
+      } else {
+        this.parentRect = null
+      }
       if (ctx) {
         var headerTop = window.$('container-header')[0] !== undefined ? window.$('container-header')[0].getBoundingClientRect().top : 56
-        canvas.width = canvas.offsetWidth
-        canvas.height = canvas.offsetHeight
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         ctx.strokeStyle = 'rgb(255,255,255)'
         ctx.lineWidth = 2
@@ -205,19 +218,6 @@ export default {
   },
   updated () {
     if (!this.drawing) {
-      var children = window.$('.card-children')
-      var parent = window.$('.card-parent')
-      var self = window.$('.card-main')
-      this.childrenRect = []
-      this.selfRect = self[0].getBoundingClientRect()
-      for (var i = 0; i < children.length; i++) {
-        this.childrenRect.push(children[i].getBoundingClientRect())
-      }
-      if (parent.length > 0) {
-        this.parentRect = parent[0].getBoundingClientRect()
-      } else {
-        this.parentRect = null
-      }
       this.draw()
       this.drawing = true
     }

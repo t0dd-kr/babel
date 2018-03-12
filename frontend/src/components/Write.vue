@@ -92,6 +92,14 @@ export default {
     draw: function () {
       var canvas = window.$('#canvas')[0]
       var ctx = canvas !== undefined ? canvas.getContext('2d') : null
+      var parent = window.$('.card-parent')
+      var self = window.$('.card-write')
+      this.selfRect = self[0].getBoundingClientRect()
+      if (parent.length > 0) {
+        this.parentRect = parent[0].getBoundingClientRect()
+      } else {
+        this.parentRect = null
+      }
       if (ctx) {
         var headerTop = window.$('container-header')[0] !== undefined ? window.$('container-header')[0].getBoundingClientRect().top : 56
         canvas.width = canvas.offsetWidth
@@ -112,15 +120,7 @@ export default {
     }
   },
   updated () {
-    if (!this.drawing || (this.parentRect === null && this.card_parent !== null)) {
-      var parent = window.$('.card-parent')
-      var self = window.$('.card-write')
-      this.selfRect = self[0].getBoundingClientRect()
-      if (parent.length > 0) {
-        this.parentRect = parent[0].getBoundingClientRect()
-      } else {
-        this.parentRect = null
-      }
+    if (!this.drawing) {
       this.draw()
       this.drawing = true
     }
