@@ -2,7 +2,7 @@
   <div class="container-fluid container-header" role="banner">
     <div class="d-flex px-3 flex-justify-between container-lg row align-items-center">
       <div class="container-search col-3">
-        <input type="text" class="search" v-model="searchText" value="" placeholder="Search">
+        <input type="text" class="search" v-model="searchText" value="" placeholder="Search" v-on:keydown="($event) => { if ($event.keyCode === 13) { search() } }">
         <a href="javascript:;" class="container-btn-search" v-on:click="search">
           <img src="../assets/search.svg" class="btn-search">
         </a>
@@ -71,10 +71,18 @@ export default {
     },
     search: function () {
       this.searchText = this.searchText.trim()
-      if (this.searchText.length >= 2) {
-        window.location.href = '/search/' + this.searchText
+      if (this.searchText[0] === '#') {
+        if (this.searchText.length >= 3) {
+          window.location.href = '/search_hashtag/' + this.searchText.slice(1)
+        } else {
+          alert('More than 2 letters required to search.')
+        }
       } else {
-        alert('More than 2 letters required to search.')
+        if (this.searchText.length >= 2) {
+          window.location.href = '/search/' + this.searchText
+        } else {
+          alert('More than 2 letters required to search.')
+        }
       }
     }
   },

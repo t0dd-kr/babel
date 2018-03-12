@@ -5,6 +5,7 @@ import Login from '@/components/Login'
 import Join from '@/components/Join'
 import Show from '@/components/Show'
 import Search from '@/components/Search'
+import SearchHashtag from '@/components/SearchHashtag'
 import Write from '@/components/Write'
 
 Vue.use(Router)
@@ -41,6 +42,11 @@ export default new Router({
       path: '/search/:text',
       name: 'Search',
       component: Search
+    },
+    {
+      path: '/search_hashtag/:text',
+      name: 'SearchHashtag',
+      component: SearchHashtag
     }
   ]
 })

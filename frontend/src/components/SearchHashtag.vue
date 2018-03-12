@@ -19,7 +19,7 @@ import Header from './Header'
 import SearchBody from './SearchBody'
 import EmptyBody from './EmptyBody'
 export default {
-  name: 'Search',
+  name: 'SearchHashtag',
   components: {
     Header,
     SearchBody,
@@ -42,7 +42,7 @@ export default {
   },
   beforeCreate () {
     if (this.$route.params.text) {
-      this.$http.get(`/api/cards/search/${this.$route.params.text}`)
+      this.$http.get(`/api/cards/search_hashtag/${this.$route.params.text}`)
         .then((res) => {
           if (res.data !== '') {
             this.cards = res.data
@@ -60,7 +60,7 @@ export default {
     }
   },
   beforeRouteUpdate (to) {
-    this.$http.get(`/api/cards/search/${this.$route.params.text}`)
+    this.$http.get(`/api/cards/search_hashtag/${this.$route.params.text}`)
       .then((res) => {
         if (res.data !== '') {
           this.cards = res.data
