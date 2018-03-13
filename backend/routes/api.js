@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/userSchema');
 const Card = require('../models/cardSchema');
-
+const Hashtag = require('../models/hashtagSchema');
 // /* GET users listing. */
 function setCardChildren(card, children) {
   var c = {
@@ -183,6 +183,18 @@ router.get('/cards/search_hashtag/:text', (req, res, next) => {
   }
 });
 
+router.get('/hashtags', (req, res, next) => {
+  Hashtag.find((err, hashtags) => {
+    if(err) {
+      console.log('load hashtags err');
+      res.send([]);
+    } else {
+      res.send(hashtags)
+      console.log(hashtags)
+    }
+  })
+})
+
 router.post('/card', (req, res, next) => {
   Card.find({question: req.body.question}, (err, cards) => {
     if(err) {
@@ -193,7 +205,11 @@ router.post('/card', (req, res, next) => {
       if(cards.length == 0)
       {
         if(req.body.parent != null) {
-          Card.updateOne({_id: req.body.parent}, {$inc: {children_count:1}});
+          Card.findById(req.body.parent, (err, card) => {
+            if(err) return err;
+            card.children_count++;
+            card.save();
+          })
         }
         new Card({
           user: req.body.user_id,
@@ -213,9 +229,27 @@ router.post('/card', (req, res, next) => {
           }
           else {
             console.log('card save success')
+            for(let i=0;i<req.body.hashtags.length;i++)
+            {
+              Hashtag.find({hashtag: req.body.hashtags[i]}, (err, hashtags) => {
+                if(err) { return err; }
+                if(hashtags.length == 0) {
+                  new Hashtag({
+                    hashtag: req.body.hashtags[i],
+                    count: 1
+                  }).save();
+                  console.log('save' + req.body.hashtags[i])
+                } else {
+                  hashtags[0].count++;
+                  hashtags[0].save();
+                  console.log('update' + req.body.hashtags[i])
+                }
+              })
+            }
             res.json({status:true, message: '', id: card._id});
           }
         });
+
       }
       else {
         res.json({status:false, message:'Saving card failed: question duplicated.'})

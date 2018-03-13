@@ -3,35 +3,66 @@
     <Header
       @authorized="(id) => user_id = id"
     />
-    <EmptyBody/>
+    <HashtagBody
+      :user_id="user_id"
+      :hashtags="hashtags"
+      :zIndexChildren="zIndexChildren"
+    />
   </div>
 </template>
 
 <script>
 import Header from './Header'
 import EmptyBody from './EmptyBody'
+import HashtagBody from './HashtagBody'
 export default {
   name: 'Index',
   components: {
     Header,
-    EmptyBody
+    EmptyBody,
+    HashtagBody
+  },
+  data () {
+    return {
+      user_id: '',
+      hashtags: [],
+      zIndexChildren: []
+    }
   },
   beforeCreate () {
-    this.$http.get('/api/cards/random')
+    this.$http.get('/api/hashtags')
       .then((res) => {
-        var id = res.data._id
-        if (id !== undefined) {
-          this.$router.push('/show/' + id)
+        if (res.data !== '') {
+          this.hashtags = res.data
+          this.zIndexChildren = new Array(this.card.children.length)
+          for (var j = 0; j < this.zIndexChildren.length; j++) {
+            this.zIndexChildren[j] = 0
+          }
+        } else {
+          this.$router.push('/')
         }
       })
       .catch((res) => {
         this.$router.push('/')
       })
   },
-  data () {
-    return {
-      user_id: ''
-    }
+  beforeRouteUpdate (to) {
+    this.$http.get('/api/hashtags')
+      .then((res) => {
+        if (res.data !== '') {
+          this.hashtags = res.data
+          console.log(this.hashtags)
+          this.zIndexChildren = new Array(this.card.children.length)
+          for (var j = 0; j < this.zIndexChildren.length; j++) {
+            this.zIndexChildren[j] = 0
+          }
+        } else {
+          this.$router.push('/')
+        }
+      })
+      .catch((res) => {
+        this.$router.push('/')
+      })
   }
 }
 </script>

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const hashtagSchema = new mongoose.Schema({
-  value: {type: String, required: true},
-  count: {type: Number, default: 1},
+  hashtag: {type: String, required: true},
+  count: {type: Number, required: true},
   id: mongoose.Schema.Types.ObjectId
 });
 
