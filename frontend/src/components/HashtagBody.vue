@@ -3,7 +3,7 @@
     <div class="hashtagbody container-fluid">
       <div class="row">
         <div class="container-hashtags col-2">
-          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 0" :href="'/search_hashtag/' + hashtag.value" :data-index="index">
+          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 0" :href="'/search_hashtag/' + hashtag.hashtag" :data-index="index">
             <Hashtag
               :hashtag="hashtag"
               :zIndex="zIndexChildren[index]"
@@ -11,7 +11,7 @@
           </a>
         </div>
         <div class="container-hashtags col-2">
-          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 1" :href="'/search_hashtag/' + hashtag.value" :data-index="index">
+          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 1" :href="'/search_hashtag/' + hashtag.hashtag" :data-index="index">
             <Hashtag
               :hashtag="hashtag"
               :zIndex="zIndexChildren[index]"
@@ -19,7 +19,7 @@
           </a>
         </div>
         <div class="container-hashtags col-2">
-          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 2" :href="'/search_hashtag/' + hashtag.value" :data-index="index">
+          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 2" :href="'/search_hashtag/' + hashtag.hashtag" :data-index="index">
             <Hashtag
               :hashtag="hashtag"
               :zIndex="zIndexChildren[index]"
@@ -27,7 +27,7 @@
           </a>
         </div>
         <div class="container-hashtags col-2">
-          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 3" :href="'/search_hashtag/' + hashtag.value" :data-index="index">
+          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 3" :href="'/search_hashtag/' + hashtag.hashtag" :data-index="index">
             <Hashtag
               :hashtag="hashtag"
               :zIndex="zIndexChildren[index]"
@@ -35,7 +35,7 @@
           </a>
         </div>
         <div class="container-hashtags col-2">
-          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 4" :href="'/search_hashtag/' + hashtag.value" :data-index="index">
+          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 4" :href="'/search_hashtag/' + hashtag.hashtag" :data-index="index">
             <Hashtag
               :hashtag="hashtag"
               :zIndex="zIndexChildren[index]"
@@ -43,7 +43,7 @@
           </a>
         </div>
         <div class="container-hashtags col-2">
-          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 5" :href="'/search_hashtag/' + hashtag.value" :data-index="index">
+          <a class="link-container-hashtag row justify-content-center col-12" v-for="(hashtag, index) in hashtags" v-bind:key="index" v-if="index % 6 === 5" :href="'/search_hashtag/' + hashtag.hashtag" :data-index="index">
             <Hashtag
               :hashtag="hashtag"
               :zIndex="zIndexChildren[index]"

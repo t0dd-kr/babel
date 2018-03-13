@@ -7,6 +7,10 @@
       :user_id="user_id"
       :hashtags="hashtags"
       :zIndexChildren="zIndexChildren"
+      v-if="hashtags.length !== 0"
+    />
+    <EmptyBody
+      v-else
     />
   </div>
 </template>
